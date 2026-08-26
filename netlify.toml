@@ -5,3 +5,21 @@
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
+
+[[redirects]]
+  from = "http://theimpactfestival.com/*"
+  to = "https://theimpactfestival.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://www.theimpactfestival.com/*"
+  to = "https://theimpactfestival.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.theimpactfestival.com/*"
+  to = "https://theimpactfestival.com/:splat"
+  status = 301
+  force = true
