@@ -1,0 +1,7 @@
+[build]
+  command = "rm -rf .deploy && mkdir .deploy && cp index.html sidhpur-map.jpg _redirects .deploy/ && cp -r images .deploy/images"
+  publish = ".deploy"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"

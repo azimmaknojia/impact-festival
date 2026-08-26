@@ -1,0 +1,15 @@
+{
+  "name": "impact-festival",
+  "version": "1.0.0",
+  "description": "Live: https://theimpactfestival.com",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@netlify/blobs": "^8.2.0"
+  }
+}
