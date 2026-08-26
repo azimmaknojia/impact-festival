@@ -23,6 +23,14 @@ jobs:
           cp index.html sidhpur-map.jpg _redirects .deploy/
           cp -r images .deploy/images
 
+      - name: Check Netlify auth token
+        run: |
+          if [ -z "${{ secrets.NETLIFY_AUTH_TOKEN }}" ]; then
+            echo "::error::NETLIFY_AUTH_TOKEN is not set."
+            echo "Either add the secret (see README Go live section) or link the GitHub repo in Netlify for continuous deployment."
+            exit 1
+          fi
+
       - name: Deploy to Netlify
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
