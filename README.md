@@ -1,64 +1,78 @@
 # Impact Festival 2026 — event website
 
-Live: https://theimpactfestival.com (also https://impact-festival-sidhpur.netlify.app)
+Live: https://theimpactfestival.com
 
-- **Event:** Dec 24–29, 2026 (tentative), Sidhpur, Gujarat, India
+- **Event:** Dec 24–27, 2026 (tentative), Sidhpur, Gujarat, India
 - **Contact on site:** Shahid Maknojia, (832) 606-8254
-- **Cost:** $99/person — intentionally NOT shown on the site yet
 - **GitHub:** https://github.com/azimmaknojia/impact-festival
 
+## Hosting (AWS)
+
+Static site + small Node API on **stealthtanks-web** EC2 (`32.193.181.198`, profile `stealthtanks`).
+
+| Piece | Path / port |
+|-------|-------------|
+| Static files | `/var/www/impact-festival/` (nginx root) |
+| Registration API | `server/index.js` on `127.0.0.1:3002`, proxied at `/api/register` |
+| Registrations storage | `/var/www/impact-festival/data/registrations/*.json` |
+| Process manager | PM2 (`ecosystem.config.js`) |
+| TLS | Let's Encrypt via certbot |
+
 ## Editing
-Everything is in `index.html` — one self-contained file (HTML + CSS + JS, no build step).
-Open it in a browser to preview locally.
 
-## Deploying
-Pushes to `main` deploy via GitHub Actions (`.github/workflows/deploy.yml`).
+Everything visible is in `index.html` (HTML + CSS + JS, no build step). Open locally in a browser to preview.
 
-Manual deploy:
-    ./deploy.sh
+## Deploy
 
-Netlify project `impact-festival-sidhpur` (ID `ba643c7e-14a9-40af-bf6e-acc0a5a6ce0d`),
-free tier, account `ali@financial-loop.com`.
+**Automatic:** push to `main` — GitHub Actions rsyncs to EC2 (needs `EC2_SSH_KEY` secret).
 
-## Go live at theimpactfestival.com
+**Manual:**
+```bash
+SSH_KEY=~/.ssh/stealthtanks-key ./deploy.sh
+```
 
-Custom domain is configured in Netlify. DNS still points to Squarespace until you update it.
+## First-time server setup
 
-### 1. Squarespace DNS (info@financial-loop.com)
+On `stealthtanks-web` as root (once):
 
-Squarespace → Domains → **theimpactfestival.com** → DNS Settings
+```bash
+sudo bash /var/www/impact-festival/deploy/ec2-bootstrap.sh
+```
 
-Remove existing Squarespace records:
-- `@` A records → `198.49.23.145`, `198.49.23.144`, `198.185.159.145`, `198.185.159.144`
-- `www` CNAME → `ext-sq.squarespace.com`
+After DNS points to the server:
 
-Add Netlify records:
+```bash
+sudo bash /var/www/impact-festival/deploy/ssl-setup.sh
+```
 
-| Host | Type  | Value                              |
-|------|-------|------------------------------------|
-| `@`  | A     | `75.2.60.5`                        |
-| `www`| CNAME | `impact-festival-sidhpur.netlify.app` |
+Create `/var/www/impact-festival/.env` on the server (not in git):
 
-Propagation usually takes 15 minutes–48 hours. Netlify will auto-provision HTTPS once DNS resolves.
+```
+REG_ADMIN_TOKEN=your-secret-token-here
+```
 
-### 2. Enable deploys from GitHub
+Restart: `pm2 reload ecosystem.config.js --env production`
 
-Pick one:
+## Admin: export registrations
 
-**Option A — Link repo in Netlify (recommended)**  
-[Netlify deploy settings](https://app.netlify.com/projects/impact-festival-sidhpur/configuration/deploys) → Link repository → GitHub → `azimmaknojia/impact-festival` → branch `main`. Build settings are in `netlify.toml`.
+```
+https://theimpactfestival.com/api/registrations?token=YOUR_TOKEN
+https://theimpactfestival.com/api/registrations?token=YOUR_TOKEN&format=csv
+```
 
-**Option B — GitHub Actions token**  
-Create a [Netlify personal access token](https://app.netlify.com/user/applications#personal-access-tokens), then add it as repo secret `NETLIFY_AUTH_TOKEN` at https://github.com/azimmaknojia/impact-festival/settings/secrets/actions
+## DNS (Squarespace)
 
-### 3. Verify
+Domain **theimpactfestival.com** is in Squarespace (info@financial-loop.com).
 
-- https://theimpactfestival.com loads the festival site (not Squarespace)
-- Netlify → Domain management → SSL certificate issued
-- Registration form posts to `/api/register`
+Remove Squarespace parking records, then add:
 
-## Known TODO
-- Sign-up and feedback forms have no backend; they open a prefilled WhatsApp/SMS
-  message to Shahid. Needs a real form backend before collecting registrations or payment.
-- Add real photos of Sidhpur / past events.
-- Confirm final dates, then remove the "tentative" labels.
+| Host | Type | Value |
+|------|------|-------|
+| `@` | **A** | `32.193.181.198` |
+| `www` | **CNAME** | `theimpactfestival.com` |
+
+Allow 15 min–48 hr for propagation, then run `deploy/ssl-setup.sh` if SSL is not yet active.
+
+## Security group
+
+Ensure `stealthtanks-sg` allows inbound **80** and **443** from `0.0.0.0/0` (likely already open for stealthtanks.com).

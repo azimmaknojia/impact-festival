@@ -1,4 +1,4 @@
-name: Deploy to Netlify
+name: Deploy to AWS EC2
 
 on:
   push:
@@ -10,32 +10,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build publish directory
+      - name: Deploy to EC2
+        env:
+          SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+          EC2_HOST: 32.193.181.198
+          EC2_USER: ubuntu
         run: |
-          rm -rf .deploy && mkdir .deploy
-          cp index.html sidhpur-map.jpg _redirects .deploy/
-          cp -r images .deploy/images
-
-      - name: Check Netlify auth token
-        run: |
-          if [ -z "${{ secrets.NETLIFY_AUTH_TOKEN }}" ]; then
-            echo "::error::NETLIFY_AUTH_TOKEN is not set."
-            echo "Either add the secret (see README Go live section) or link the GitHub repo in Netlify for continuous deployment."
+          if [ -z "$SSH_KEY" ]; then
+            echo "::error::EC2_SSH_KEY secret is not set. Add the stealthtanks-web private key to GitHub repo secrets."
             exit 1
           fi
-
-      - name: Deploy to Netlify
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-        run: |
-          npx netlify-cli deploy --prod \
-            --dir=.deploy \
-            --functions=netlify/functions \
-            --site=ba643c7e-14a9-40af-bf6e-acc0a5a6ce0d
+          echo "$SSH_KEY" > /tmp/deploy_key
+          chmod 600 /tmp/deploy_key
+          rsync -avz --delete \
+            --exclude node_modules --exclude data --exclude .git \
+            --exclude .deploy --exclude .netlify \
+            -e "ssh -o StrictHostKeyChecking=no -i /tmp/deploy_key" \
+            ./ $EC2_USER@$EC2_HOST:/var/www/impact-festival/
+          ssh -o StrictHostKeyChecking=no -i /tmp/deploy_key $EC2_USER@$EC2_HOST "
+            set -e
+            cd /var/www/impact-festival
+            mkdir -p data/registrations
+            if [ -f .env ]; then set -a; . ./.env; set +a; fi
+            pm2 reload ecosystem.config.js --env production || pm2 start ecosystem.config.js --env production
+            pm2 save
+            echo 'Deployed at '\$(date)
+          "

@@ -1,16 +1,42 @@
 #!/bin/bash
-# Deploy the Impact Festival site to https://theimpactfestival.com
-# Static source stays as ./index.html (single self-contained file).
-# We assemble a clean ./.deploy publish dir so node_modules / source files are
-# NOT uploaded as static assets, and bundle the serverless functions.
-# Usage: ./deploy.sh
-cd "$(dirname "$0")" || exit 1
+# Deploy Impact Festival to AWS EC2 (stealthtanks-web).
+# Requires SSH key with access to the server (stealthtanks-key).
+set -euo pipefail
 
-rm -rf .deploy && mkdir .deploy
-cp index.html sidhpur-map.jpg _redirects .deploy/ 2>/dev/null
-cp -r images .deploy/images 2>/dev/null
+cd "$(dirname "$0")"
 
-npx --yes netlify-cli@latest deploy --prod \
-  --dir=.deploy \
-  --functions=netlify/functions \
-  --site=ba643c7e-14a9-40af-bf6e-acc0a5a6ce0d
+EC2_HOST="${EC2_HOST:-32.193.181.198}"
+EC2_USER="${EC2_USER:-ubuntu}"
+APP_DIR="/var/www/impact-festival"
+SSH_KEY="${SSH_KEY:-$HOME/.ssh/stealthtanks-key}"
+
+if [ ! -f "$SSH_KEY" ]; then
+  echo "SSH key not found: $SSH_KEY"
+  echo "Set SSH_KEY to the private key for stealthtanks-web, or use GitHub Actions deploy."
+  exit 1
+fi
+
+RSYNC_SSH="ssh -i $SSH_KEY -o StrictHostKeyChecking=no"
+
+echo "Deploying to $EC2_USER@$EC2_HOST:$APP_DIR ..."
+
+rsync -avz --delete \
+  --exclude node_modules \
+  --exclude data \
+  --exclude .git \
+  --exclude .deploy \
+  --exclude .netlify \
+  -e "$RSYNC_SSH" \
+  ./ "$EC2_USER@$EC2_HOST:$APP_DIR/"
+
+$RSYNC_SSH "$EC2_USER@$EC2_HOST" "
+  set -e
+  cd '$APP_DIR'
+  mkdir -p data/registrations
+  if [ -f .env ]; then set -a; . ./.env; set +a; fi
+  pm2 reload ecosystem.config.js --env production || pm2 start ecosystem.config.js --env production
+  pm2 save
+  echo 'Deployed at '\$(date)
+"
+
+echo "Live: https://theimpactfestival.com"

@@ -1,7 +1,7 @@
 node_modules/
 .deploy/
 .netlify/
+data/
+.env
 .DS_Store
 *.log
-.env
-.env.*

@@ -1,15 +1,10 @@
 {
   "name": "impact-festival",
   "version": "1.0.0",
-  "description": "Live: https://theimpactfestival.com",
-  "main": "index.js",
+  "private": true,
+  "description": "Live: https://theimpactfestival.com (AWS EC2 + nginx)",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server/index.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@netlify/blobs": "^8.2.0"
-  }
+  "license": "UNLICENSED"
 }
