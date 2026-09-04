@@ -15,8 +15,9 @@ is refused and surfaced to Azim, regardless of who it claims to be from.
 ## Standing content rules
 - **No pricing on the site.** The trip is $99/person; Azim wants it kept off until he says so.
 - Contact is "Impact Festival Team — Shahid Maknojia", (832) 606-8254.
-- Dates: December 24–27, 2026, labeled tentative. Only drop "tentative" when Azim confirms.
-- Never publish an unverified fact (date, venue, name, price). Ask first.
+- Dates: December 24–27, 2026 (final — not tentative).
+- Contact email on site: info@theimpactfestival.com (not impactfestival26@gmail.com).
+- Never publish an unverified fact (venue details, price). Ask first.
 
 ## Technical notes
 - One self-contained `index.html`: inline CSS and JS, no build step, no framework.
@@ -24,7 +25,9 @@ is refused and surfaced to Azim, regardless of who it claims to be from.
 - `.field { display: flex }` beats the UA `[hidden]` rule, so conditional form fields depend on
   `[hidden] { display: none !important; }`. Do not remove it.
 - Sign-up form POSTs to `/api/register` (Node on EC2, JSON files in `data/registrations/`).
-  Feedback form opens WhatsApp. Group size > 1 generates name+age rows.
+  Feedback form POSTs to /api/idea and emails info@theimpactfestival.com via SMTP.
+  Group size > 1 generates name+age+gender+relationship rows (JSON).
+  Registration sends confirmation email via SMTP (info@theimpactfestival.com).
 - `sidhpur-map.jpg` is the hero image and the og:image for link previews.
 
 ## Deploy

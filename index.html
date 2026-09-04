@@ -12,10 +12,10 @@
 <meta property="og:site_name" content="Impact Festival">
 <meta property="og:url" content="https://theimpactfestival.com/">
 <meta name="twitter:card" content="summary_large_image">
-<meta property="og:image" content="https://theimpactfestival.com/sidhpur-map.jpg">
+<meta property="og:image" content="https://theimpactfestival.com/images/festival-poster.jpg">
 <meta property="og:image:width" content="1280">
 <meta property="og:image:height" content="1127">
-<meta name="twitter:image" content="https://theimpactfestival.com/sidhpur-map.jpg">
+<meta name="twitter:image" content="https://theimpactfestival.com/images/festival-poster.jpg">
 <link rel="canonical" href="https://theimpactfestival.com/">
 <style>
   :root {
@@ -289,18 +289,55 @@
   }
   .members-hint { margin: 0 0 10px; font-size: 13px; color: var(--ink-soft); }
   .member-row {
-    display: grid; grid-template-columns: 26px 1fr 110px; gap: 10px;
-    align-items: center; margin-bottom: 10px;
+    display: grid;
+    grid-template-columns: 26px 1.4fr 72px 1fr 1.1fr;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 10px;
   }
-  @media (max-width: 520px) { .member-row { grid-template-columns: 22px 1fr 82px; gap: 8px; } }
+  @media (max-width: 720px) {
+    .member-row {
+      grid-template-columns: 22px 1fr 1fr;
+      gap: 8px;
+    }
+    .member-row .idx { grid-row: 1 / span 2; }
+    .member-row .m-name { grid-column: 2 / span 2; }
+  }
   .member-row .idx {
     font-size: 13px; font-weight: 700; color: var(--copper); text-align: right;
   }
-  .member-row input {
+  .member-row input, .member-row select {
     padding: 11px 12px; border: 1px solid var(--line); border-radius: 8px;
-    background: var(--ground); color: var(--ink); font: inherit; font-size: 16px; width: 100%;
+    background: var(--ground); color: var(--ink); font: inherit; font-size: 15px; width: 100%;
   }
-  .member-row input:focus { outline: 2px solid var(--gold); outline-offset: 1px; border-color: var(--gold); }
+  .member-row input:focus, .member-row select:focus {
+    outline: 2px solid var(--gold); outline-offset: 1px; border-color: var(--gold);
+  }
+  .disclosure {
+    margin-top: 18px;
+    padding: 14px 16px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: rgba(201, 162, 75, 0.08);
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+  .disclosure label {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    cursor: pointer;
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .disclosure input[type="checkbox"] {
+    margin-top: 3px;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+  .disclosure .disc-body { font-weight: 400; color: var(--ink-soft); margin-top: 8px; }
   .form-actions { margin-top: 24px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
   .btn-deep { background: var(--deep-2); color: #f3ecd9; border: none; }
   .btn-deep:hover { filter: brightness(1.15); }
@@ -308,13 +345,15 @@
   .sent-msg { display: none; margin-top: 14px; color: var(--ok); font-weight: 600; font-size: 14.5px; }
 
   /* ---------- Sponsors ---------- */
-  .sponsor-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-top: 36px; }
+  .sponsor-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-top: 36px; align-items: stretch; }
   .sponsor {
     border: 1.5px solid var(--gold); border-radius: 10px; padding: 26px;
     background: linear-gradient(180deg, rgba(201,162,75,0.07), transparent);
+    display: flex; flex-direction: column; height: 100%;
   }
   .sponsor h3 { margin: 0 0 10px; font-size: 20px; color: var(--copper); }
   .sponsor p { margin: 0 0 6px; color: var(--ink-soft); font-size: 15px; }
+  .sponsor .sponsor-cta { margin-top: auto; padding-top: 14px; }
 
   /* ---------- FAQ ---------- */
   .faq details { border-bottom: 1px solid var(--line); padding: 4px 0; }
@@ -359,7 +398,7 @@
     <h1>Impact Festival</h1>
     <p class="sub">A journey back to our roots &mdash; Sidhpur, Gujarat</p>
     <div class="hero-meta">
-      <span><strong>December 24&ndash;27, 2026</strong> &middot; tentative</span>
+      <span><strong>December 24&ndash;27, 2026</strong></span>
       <span><strong>4 full days</strong> of festival</span>
       <span><strong>Sidhpur</strong>, North Gujarat, India</span>
     </div>
@@ -454,6 +493,7 @@
       <div class="exp"><span class="tag">All ages</span><h3>Youth Camp &amp; Activities</h3><p>A dedicated youth program &mdash; games, cricket, heritage scavenger hunts, and service activities that connect kids to their roots.</p></div>
       <div class="exp"><span class="tag">Food</span><h3>Authentic Gujarati Food</h3><p>Full Gujarati thali, street-food nights, fresh jalebi-fafda mornings &mdash; every meal is part of the experience, and it's all included.</p></div>
       <div class="exp"><span class="tag">Community</span><h3>Seva &amp; Community Impact</h3><p>Volunteer alongside the local jamat on a service project &mdash; the "impact" in Impact Festival.</p></div>
+      <div class="exp"><span class="tag">Stay</span><h3>Host Families &amp; Lodging</h3><p>Stay with local Ismaili host families or in coordinated hotel blocks &mdash; comfortable options for every group, arranged by the organizing team.</p></div>
     </div>
   </div>
 </section>
@@ -462,7 +502,7 @@
   <div class="wrap">
     <p class="eyebrow">Program Outline</p>
     <h2>December 24&ndash;27 at a glance</h2>
-    <p class="lede">Four days of festival, December 24th through the 27th. Dates and schedule are tentative &mdash; the final program will be shared with registered guests.</p>
+    <p class="lede">Four days of festival, December 24th through the 27th. The final day-by-day program will be shared with registered guests.</p>
     <div class="days">
       <div class="day"><div class="num">Thu, Dec 24</div><h3>Welcome Home</h3><ul><li>Arrivals, check-in &amp; registration</li><li>Welcome dinner with the local jamat</li><li>Opening night dandiya</li></ul></div>
       <div class="day"><div class="num">Fri, Dec 25</div><h3>Our Villages</h3><ul><li>Ancestral village tours</li><li>AKDN project visits</li><li>Evening mela &amp; food stalls</li></ul></div>
@@ -484,10 +524,10 @@
         <input type="hidden" name="party_members" id="s-members-data">
         <div class="form-grid">
           <div class="field"><label for="s-name">Full name *</label><input id="s-name" name="name" required autocomplete="name" placeholder="Your name"></div>
-          <div class="field"><label for="s-phone">Phone (WhatsApp preferred) *</label><input id="s-phone" name="phone" required type="tel" autocomplete="tel" placeholder="(555) 555-5555"></div>
-          <div class="field"><label for="s-email">Email</label><input id="s-email" name="email" type="email" autocomplete="email" placeholder="you@email.com"></div>
+          <div class="field"><label for="s-phone">Phone *</label><input id="s-phone" name="phone" required type="tel" autocomplete="tel" placeholder="(555) 555-5555"></div>
+          <div class="field"><label for="s-email">Email *</label><input id="s-email" name="email" type="email" required autocomplete="email" placeholder="you@email.com"></div>
           <div class="field"><label for="s-city">City &amp; state</label><input id="s-city" name="city" placeholder="Houston, TX"></div>
-          <div class="field"><label for="s-country">Country of origin</label><select id="s-country" name="country_of_origin"><option value="">Select a country...</option><option>Afghanistan</option><option>Albania</option><option>Algeria</option><option>Andorra</option><option>Angola</option><option>Antigua and Barbuda</option><option>Argentina</option><option>Armenia</option><option>Australia</option><option>Austria</option><option>Azerbaijan</option><option>Bahamas</option><option>Bahrain</option><option>Bangladesh</option><option>Barbados</option><option>Belarus</option><option>Belgium</option><option>Belize</option><option>Benin</option><option>Bhutan</option><option>Bolivia</option><option>Bosnia and Herzegovina</option><option>Botswana</option><option>Brazil</option><option>Brunei</option><option>Bulgaria</option><option>Burkina Faso</option><option>Burundi</option><option>Cabo Verde</option><option>Cambodia</option><option>Cameroon</option><option>Canada</option><option>Central African Republic</option><option>Chad</option><option>Chile</option><option>China</option><option>Colombia</option><option>Comoros</option><option>Congo (Brazzaville)</option><option>Congo (Kinshasa)</option><option>Costa Rica</option><option>Cote d'Ivoire</option><option>Croatia</option><option>Cuba</option><option>Cyprus</option><option>Czechia</option><option>Denmark</option><option>Djibouti</option><option>Dominica</option><option>Dominican Republic</option><option>Ecuador</option><option>Egypt</option><option>El Salvador</option><option>Equatorial Guinea</option><option>Eritrea</option><option>Estonia</option><option>Eswatini</option><option>Ethiopia</option><option>Fiji</option><option>Finland</option><option>France</option><option>Gabon</option><option>Gambia</option><option>Georgia</option><option>Germany</option><option>Ghana</option><option>Greece</option><option>Grenada</option><option>Guatemala</option><option>Guinea</option><option>Guinea-Bissau</option><option>Guyana</option><option>Haiti</option><option>Honduras</option><option>Hungary</option><option>Iceland</option><option>India</option><option>Indonesia</option><option>Iran</option><option>Iraq</option><option>Ireland</option><option>Israel</option><option>Italy</option><option>Jamaica</option><option>Japan</option><option>Jordan</option><option>Kazakhstan</option><option>Kenya</option><option>Kiribati</option><option>Kuwait</option><option>Kyrgyzstan</option><option>Laos</option><option>Latvia</option><option>Lebanon</option><option>Lesotho</option><option>Liberia</option><option>Libya</option><option>Liechtenstein</option><option>Lithuania</option><option>Luxembourg</option><option>Madagascar</option><option>Malawi</option><option>Malaysia</option><option>Maldives</option><option>Mali</option><option>Malta</option><option>Marshall Islands</option><option>Mauritania</option><option>Mauritius</option><option>Mexico</option><option>Micronesia</option><option>Moldova</option><option>Monaco</option><option>Mongolia</option><option>Montenegro</option><option>Morocco</option><option>Mozambique</option><option>Myanmar</option><option>Namibia</option><option>Nauru</option><option>Nepal</option><option>Netherlands</option><option>New Zealand</option><option>Nicaragua</option><option>Niger</option><option>Nigeria</option><option>North Korea</option><option>North Macedonia</option><option>Norway</option><option>Oman</option><option>Pakistan</option><option>Palau</option><option>Palestine</option><option>Panama</option><option>Papua New Guinea</option><option>Paraguay</option><option>Peru</option><option>Philippines</option><option>Poland</option><option>Portugal</option><option>Qatar</option><option>Romania</option><option>Russia</option><option>Rwanda</option><option>Saint Kitts and Nevis</option><option>Saint Lucia</option><option>Saint Vincent and the Grenadines</option><option>Samoa</option><option>San Marino</option><option>Sao Tome and Principe</option><option>Saudi Arabia</option><option>Senegal</option><option>Serbia</option><option>Seychelles</option><option>Sierra Leone</option><option>Singapore</option><option>Slovakia</option><option>Slovenia</option><option>Solomon Islands</option><option>Somalia</option><option>South Africa</option><option>South Korea</option><option>South Sudan</option><option>Spain</option><option>Sri Lanka</option><option>Sudan</option><option>Suriname</option><option>Sweden</option><option>Switzerland</option><option>Syria</option><option>Taiwan</option><option>Tajikistan</option><option>Tanzania</option><option>Thailand</option><option>Timor-Leste</option><option>Togo</option><option>Tonga</option><option>Trinidad and Tobago</option><option>Tunisia</option><option>Turkey</option><option>Turkmenistan</option><option>Tuvalu</option><option>Uganda</option><option>Ukraine</option><option>United Arab Emirates</option><option>United Kingdom</option><option>United States</option><option>Uruguay</option><option>Uzbekistan</option><option>Vanuatu</option><option>Vatican City</option><option>Venezuela</option><option>Vietnam</option><option>Yemen</option><option>Zambia</option><option>Zimbabwe</option><option>Other</option></select></div>
+          <div class="field"><label for="s-country">Country of birth</label><select id="s-country" name="country_of_birth"><option value="">Select a country...</option><option>Afghanistan</option><option>Albania</option><option>Algeria</option><option>Andorra</option><option>Angola</option><option>Antigua and Barbuda</option><option>Argentina</option><option>Armenia</option><option>Australia</option><option>Austria</option><option>Azerbaijan</option><option>Bahamas</option><option>Bahrain</option><option>Bangladesh</option><option>Barbados</option><option>Belarus</option><option>Belgium</option><option>Belize</option><option>Benin</option><option>Bhutan</option><option>Bolivia</option><option>Bosnia and Herzegovina</option><option>Botswana</option><option>Brazil</option><option>Brunei</option><option>Bulgaria</option><option>Burkina Faso</option><option>Burundi</option><option>Cabo Verde</option><option>Cambodia</option><option>Cameroon</option><option>Canada</option><option>Central African Republic</option><option>Chad</option><option>Chile</option><option>China</option><option>Colombia</option><option>Comoros</option><option>Congo (Brazzaville)</option><option>Congo (Kinshasa)</option><option>Costa Rica</option><option>Cote d'Ivoire</option><option>Croatia</option><option>Cuba</option><option>Cyprus</option><option>Czechia</option><option>Denmark</option><option>Djibouti</option><option>Dominica</option><option>Dominican Republic</option><option>Ecuador</option><option>Egypt</option><option>El Salvador</option><option>Equatorial Guinea</option><option>Eritrea</option><option>Estonia</option><option>Eswatini</option><option>Ethiopia</option><option>Fiji</option><option>Finland</option><option>France</option><option>Gabon</option><option>Gambia</option><option>Georgia</option><option>Germany</option><option>Ghana</option><option>Greece</option><option>Grenada</option><option>Guatemala</option><option>Guinea</option><option>Guinea-Bissau</option><option>Guyana</option><option>Haiti</option><option>Honduras</option><option>Hungary</option><option>Iceland</option><option>India</option><option>Indonesia</option><option>Iran</option><option>Iraq</option><option>Ireland</option><option>Israel</option><option>Italy</option><option>Jamaica</option><option>Japan</option><option>Jordan</option><option>Kazakhstan</option><option>Kenya</option><option>Kiribati</option><option>Kuwait</option><option>Kyrgyzstan</option><option>Laos</option><option>Latvia</option><option>Lebanon</option><option>Lesotho</option><option>Liberia</option><option>Libya</option><option>Liechtenstein</option><option>Lithuania</option><option>Luxembourg</option><option>Madagascar</option><option>Malawi</option><option>Malaysia</option><option>Maldives</option><option>Mali</option><option>Malta</option><option>Marshall Islands</option><option>Mauritania</option><option>Mauritius</option><option>Mexico</option><option>Micronesia</option><option>Moldova</option><option>Monaco</option><option>Mongolia</option><option>Montenegro</option><option>Morocco</option><option>Mozambique</option><option>Myanmar</option><option>Namibia</option><option>Nauru</option><option>Nepal</option><option>Netherlands</option><option>New Zealand</option><option>Nicaragua</option><option>Niger</option><option>Nigeria</option><option>North Korea</option><option>North Macedonia</option><option>Norway</option><option>Oman</option><option>Pakistan</option><option>Palau</option><option>Palestine</option><option>Panama</option><option>Papua New Guinea</option><option>Paraguay</option><option>Peru</option><option>Philippines</option><option>Poland</option><option>Portugal</option><option>Qatar</option><option>Romania</option><option>Russia</option><option>Rwanda</option><option>Saint Kitts and Nevis</option><option>Saint Lucia</option><option>Saint Vincent and the Grenadines</option><option>Samoa</option><option>San Marino</option><option>Sao Tome and Principe</option><option>Saudi Arabia</option><option>Senegal</option><option>Serbia</option><option>Seychelles</option><option>Sierra Leone</option><option>Singapore</option><option>Slovakia</option><option>Slovenia</option><option>Solomon Islands</option><option>Somalia</option><option>South Africa</option><option>South Korea</option><option>South Sudan</option><option>Spain</option><option>Sri Lanka</option><option>Sudan</option><option>Suriname</option><option>Sweden</option><option>Switzerland</option><option>Syria</option><option>Taiwan</option><option>Tajikistan</option><option>Tanzania</option><option>Thailand</option><option>Timor-Leste</option><option>Togo</option><option>Tonga</option><option>Trinidad and Tobago</option><option>Tunisia</option><option>Turkey</option><option>Turkmenistan</option><option>Tuvalu</option><option>Uganda</option><option>Ukraine</option><option>United Arab Emirates</option><option>United Kingdom</option><option>United States</option><option>Uruguay</option><option>Uzbekistan</option><option>Vanuatu</option><option>Vatican City</option><option>Venezuela</option><option>Vietnam</option><option>Yemen</option><option>Zambia</option><option>Zimbabwe</option><option>Other</option></select></div>
           <div class="field"><label for="s-visa">Do you need a visa to travel to India?</label><select id="s-visa" name="needs_visa"><option value="">Select...</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
           <div class="field"><label for="s-count">How many people in your group?</label><select id="s-count" name="group_size"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="more">More than 10</option></select></div>
           <div class="field"><label for="s-village">Family's ancestral village (if known)</label><select id="s-village" name="ancestral_village"><option value="">Select a village...</option><option value="Abadpura">Abadpura</option><option value="Alipura">Alipura</option><option value="Deodapura">Deodapura</option><option value="Dethli">Dethli</option><option value="Hisor">Hisor</option><option value="Ismailpura">Ismailpura</option><option value="Karan">Karan</option><option value="Kuwara">Kuwara</option><option value="Ladjipura">Ladjipura</option><option value="Lodhpur">Lodhpur</option><option value="Mahendrapur">Mahendrapur</option><option value="Manpura">Manpura</option><option value="Mehtan">Mehtan</option><option value="Meloj">Meloj</option><option value="Meta">Meta</option><option value="Metrana">Metrana</option><option value="Mudana">Mudana</option><option value="Punasan">Punasan</option><option value="Samoda">Samoda</option><option value="Sandesri">Sandesri</option><option value="Sidhpur">Sidhpur</option><option value="Vanasan">Vanasan</option><option value="Varsila">Varsila</option><option value="__notsure__">Not sure &mdash; please help me find it</option><option value="__other__">Other (not listed)</option></select></div>
@@ -500,11 +540,20 @@
           </div>
           <div class="field full"><label for="s-notes">Anything we should know?</label><textarea id="s-notes" name="notes" rows="3" placeholder="Traveling with elders, kids' ages, questions..."></textarea></div>
         </div>
+        <div class="disclosure">
+          <label for="s-disclosure">
+            <input id="s-disclosure" name="disclosure" type="checkbox" value="yes" required>
+            <span>I understand and agree to the registration disclosure below. *</span>
+          </label>
+          <div class="disc-body">
+            Submitting this form expresses interest in Impact Festival 2026 (December 24&ndash;27, Sidhpur, Gujarat). It is <strong>not a payment, ticket purchase, or travel booking</strong>. The Impact Festival Team will use the information you provide to plan capacity and to contact you with festival updates by email or phone. You may ask us to remove your information at any time by emailing info@theimpactfestival.com.
+          </div>
+        </div>
         <div class="form-actions">
           <button type="submit" class="btn btn-gold">Register</button>
         </div>
-        <p class="sent-msg" id="signupSent">You're registered &mdash; thank you, we'll be in touch with festival updates!</p>
-        <p class="form-note">Your info goes directly to the Impact Festival Team. We'll only use it for festival updates.</p>
+        <p class="sent-msg" id="signupSent">You're registered &mdash; check your email for a confirmation from info@theimpactfestival.com.</p>
+        <p class="form-note">Your info goes to the Impact Festival Team at info@theimpactfestival.com. We'll only use it for festival planning and updates.</p>
       </form>
     </div>
   </div>
@@ -523,9 +572,9 @@
           <div class="field full"><label for="f-idea">Your idea or suggestion *</label><textarea id="f-idea" rows="4" required placeholder="What should we include in the festival?"></textarea></div>
         </div>
         <div class="form-actions">
-          <button type="submit" class="btn btn-gold">Send Idea via WhatsApp</button>
+          <button type="submit" class="btn btn-gold">Send Idea via Email</button>
         </div>
-        <p class="sent-msg" id="feedbackSent">Opening WhatsApp &mdash; thank you for helping shape the festival!</p>
+        <p class="sent-msg" id="feedbackSent">Thank you &mdash; your idea was emailed to the Impact Festival Team at info@theimpactfestival.com.</p>
       </form>
     </div>
   </div>
@@ -541,13 +590,13 @@
         <h3>Become a Sponsor</h3>
         <p>Grand sponsorships, day sponsorships, and in-kind donations help us keep this experience affordable for every family.</p>
         <p>Sponsor a dinner, a concert night, the youth camp, or village transportation &mdash; and be recognized throughout the festival.</p>
-        <p style="margin-top:14px"><a href="https://wa.me/18326068254?text=Salaam%2C%20I%27m%20interested%20in%20sponsoring%20Impact%20Festival%202026%20(Dec%2024-27)." class="btn btn-deep" style="font-size:14px; padding:10px 20px;">Talk to Us About Sponsoring</a></p>
+        <p class="sponsor-cta"><a href="mailto:info@theimpactfestival.com?subject=Impact%20Festival%202026%20Sponsorship&body=Salaam%2C%20I%27m%20interested%20in%20sponsoring%20Impact%20Festival%202026%20(Dec%2024-27)." class="btn btn-deep" style="font-size:14px; padding:10px 20px;">Email Us About Sponsoring</a></p>
       </div>
       <div class="sponsor">
         <h3>Financial Aid</h3>
         <p>No family should miss this journey because of cost. Confidential financial assistance is available for those who need support to attend.</p>
         <p>All requests are handled privately and with dignity &mdash; just reach out.</p>
-        <p style="margin-top:14px"><a href="tel:8326068254" class="btn btn-deep" style="font-size:14px; padding:10px 20px;">Ask About Financial Aid</a></p>
+        <p class="sponsor-cta"><a href="mailto:info@theimpactfestival.com?subject=Impact%20Festival%202026%20Financial%20Aid&body=Salaam%2C%20I%27d%20like%20to%20ask%20about%20confidential%20financial%20aid%20for%20Impact%20Festival%202026." class="btn btn-deep" style="font-size:14px; padding:10px 20px;">Email Us About Financial Aid</a></p>
       </div>
     </div>
   </div>
@@ -559,7 +608,7 @@
     <h2>Frequently asked questions</h2>
     <div style="margin-top: 28px;">
       <details><summary>What is Impact Festival?</summary><p>A 4-day, not-for-profit community celebration held December 24&ndash;27, 2026 in Sidhpur, Gujarat &mdash; bringing Ismaili families from across the USA back to the region where our community's roots began, together with the local jamat, for food, music, heritage tours, and community impact.</p></details>
-      <details><summary>When exactly is it?</summary><p><strong>December 24&ndash;27, 2026 &mdash; these dates are tentative and being confirmed.</strong> Four days of festival, Thursday Dec 24 through Sunday Dec 27. Most guests will arrive a day early and leave a day after. Sign up above and we'll notify you the moment dates are locked in, before you book flights.</p></details>
+      <details><summary>When exactly is it?</summary><p><strong>December 24&ndash;27, 2026.</strong> Four days of festival, Thursday Dec 24 through Sunday Dec 27. Most guests will arrive a day early and leave a day after. Sign up above and we'll keep you updated before you book flights.</p></details>
       <details><summary>What's included?</summary><p>The festival program covers your meals and all festival venues and events &mdash; the dinners, dandiya nights, concert, mela, and organized programs. Details on the full package will be shared with registered guests.</p></details>
       <details><summary>Are flights included?</summary><p>No &mdash; guests arrange their own flights to India. Most travelers fly into Ahmedabad (AMD), about 2.5 hours from Sidhpur by road. <strong>Book early:</strong> late December is peak holiday season for India travel, so fares rise sharply and seats sell out months ahead. We'll share travel guidance and group-coordination options as the event approaches.</p></details>
       <details><summary>Where will we stay?</summary><p>We're arranging block hotel bookings, host-family stays with local Ismaili homes, and other options at a range of comfort levels. Accommodation details and pricing will be shared with registered guests.</p></details>
@@ -569,7 +618,7 @@
       <details><summary>Will the food be halal / vegetarian-friendly?</summary><p>Yes. All festival meals will be halal, with abundant vegetarian options &mdash; this is Gujarat, after all, home of India's best vegetarian food.</p></details>
       <details><summary>Can relatives from outside the USA join?</summary><p>Yes! Family joining from India, Canada, or anywhere else is welcome. Note it in your sign-up and we'll plan accordingly.</p></details>
       <details><summary>I don't know my family's village &mdash; can I still find my roots?</summary><p>Yes &mdash; many families have rediscovered their ancestral villages through elders and local jamat records. Tell us what you know and our local team will help trace it before the trip.</p></details>
-      <details><summary>Who's organizing this?</summary><p>A volunteer team from our community, working with local jamati leaders in Gujarat. For any questions, contact the Impact Festival Team &mdash; impactfestival26@gmail.com.</p></details>
+      <details><summary>Who's organizing this?</summary><p>A volunteer team from our community, working with local jamati leaders in Gujarat. For any questions, contact the Impact Festival Team &mdash; info@theimpactfestival.com.</p></details>
     </div>
   </div>
 </section>
@@ -580,20 +629,18 @@
     <h2>We're here to help</h2>
     <p>Contact our organizing team any time</p>
     <p class="contact-team">Impact Festival Team</p>
-    <a class="phone" href="mailto:impactfestival26@gmail.com">impactfestival26@gmail.com</a>
+    <a class="phone" href="mailto:info@theimpactfestival.com">info@theimpactfestival.com</a>
   </div>
 </section>
 
 <footer>
   <div class="wrap">
-    Impact Festival &middot; December 24&ndash;27, 2026 (tentative) &middot; Sidhpur, Gujarat, India<br>
-    A not-for-profit community program &middot; Contact: Impact Festival Team &mdash; impactfestival26@gmail.com
+    Impact Festival &middot; December 24&ndash;27, 2026 &middot; Sidhpur, Gujarat, India<br>
+    A not-for-profit community program &middot; Contact: Impact Festival Team &mdash; info@theimpactfestival.com
   </div>
 </footer>
 
 <script>
-  var PHONE = "18326068254";
-
   function val(id) { var el = document.getElementById(id); return el ? el.value.trim() : ""; }
 
   var MAX_MEMBERS = 40;
@@ -629,21 +676,55 @@
       var pos = i + 2;
       row.innerHTML =
         '<span class="idx">' + pos + '.</span>' +
-        '<input type="text" class="m-name" placeholder="Full name of person ' + pos + '">' +
-        '<input type="number" class="m-age" min="0" max="120" placeholder="Age">';
+        '<input type="text" class="m-name" placeholder="Full name" required>' +
+        '<input type="number" class="m-age" min="0" max="120" placeholder="Age">' +
+        '<select class="m-gender" required>' +
+          '<option value="">Gender...</option>' +
+          '<option>Female</option>' +
+          '<option>Male</option>' +
+          '<option>Prefer not to say</option>' +
+          '<option>Other</option>' +
+        '</select>' +
+        '<select class="m-rel" required>' +
+          '<option value="">Relationship...</option>' +
+          '<option>Spouse / Partner</option>' +
+          '<option>Child</option>' +
+          '<option>Parent</option>' +
+          '<option>Sibling</option>' +
+          '<option>Relative</option>' +
+          '<option>Friend</option>' +
+          '<option>Other</option>' +
+        '</select>';
       list.appendChild(row);
     }
     while (list.children.length > needed) list.removeChild(list.lastChild);
   }
 
-  function membersLines() {
+  function membersData() {
     var rows = document.querySelectorAll("#membersList .member-row");
-    if (!rows.length) return [];
-    var out = ["Travelling with:"];
+    var out = [];
     for (var i = 0; i < rows.length; i++) {
-      var nm = rows[i].querySelector(".m-name").value.trim() || "(name not given)";
-      var ag = rows[i].querySelector(".m-age").value.trim();
-      out.push("  " + (i + 2) + ". " + nm + (ag ? " (age " + ag + ")" : ""));
+      out.push({
+        name: rows[i].querySelector(".m-name").value.trim(),
+        age: rows[i].querySelector(".m-age").value.trim(),
+        gender: rows[i].querySelector(".m-gender").value.trim(),
+        relationship: rows[i].querySelector(".m-rel").value.trim()
+      });
+    }
+    return out;
+  }
+
+  function membersLines() {
+    var data = membersData();
+    if (!data.length) return [];
+    var out = ["Travelling with:"];
+    for (var i = 0; i < data.length; i++) {
+      var m = data[i];
+      var bits = [m.name || "(name not given)"];
+      if (m.age) bits.push("age " + m.age);
+      if (m.gender) bits.push(m.gender);
+      if (m.relationship) bits.push(m.relationship);
+      out.push("  " + (i + 2) + ". " + bits.join(", "));
     }
     return out;
   }
@@ -679,18 +760,6 @@
     ]).join("\n");
   }
 
-  function feedbackMessage() {
-    return [
-      "IMPACT FESTIVAL 2026 - IDEA",
-      "From: " + (val("f-name") || "Anonymous"),
-      "Category: " + val("f-topic"),
-      "Idea: " + val("f-idea")
-    ].join("\n");
-  }
-
-  function openWhatsApp(msg) {
-    window.open("https://wa.me/" + PHONE + "?text=" + encodeURIComponent(msg), "_blank");
-  }
 
   function extraValidity() {
     var vs = document.getElementById("s-village");
@@ -702,8 +771,8 @@
   }
 
   function collectMembers() {
-    var lines = membersLines();
-    document.getElementById("s-members-data").value = lines.length ? lines.join("\n") : "";
+    var data = membersData();
+    document.getElementById("s-members-data").value = data.length ? JSON.stringify(data) : "";
   }
 
   document.getElementById("signupForm").addEventListener("submit", function (e) {
@@ -720,7 +789,15 @@
       body: body
     }).then(function (r) {
       if (!r.ok) throw new Error("bad status");
-      document.getElementById("signupSent").style.display = "block";
+      return r.json().catch(function () { return { ok: true }; });
+    }).then(function (data) {
+      var msg = document.getElementById("signupSent");
+      if (data && data.email_sent === false) {
+        msg.textContent = "You're registered \u2014 thank you! We could not send the confirmation email just now; we will follow up soon.";
+      } else {
+        msg.textContent = "You're registered \u2014 check your email for a confirmation from info@theimpactfestival.com.";
+      }
+      msg.style.display = "block";
       form.reset();
       document.getElementById("villageOtherWrap").hidden = true;
       document.getElementById("moreCountWrap").hidden = true;
@@ -728,14 +805,39 @@
       if (btn) { btn.disabled = false; btn.textContent = "Register"; }
     }).catch(function () {
       if (btn) { btn.disabled = false; btn.textContent = "Register"; }
-      alert("Something went wrong submitting your registration - please try again, or email impactfestival26@gmail.com.");
+      alert("Something went wrong submitting your registration - please try again, or email info@theimpactfestival.com.");
     });
   });
 
   document.getElementById("feedbackForm").addEventListener("submit", function (e) {
     e.preventDefault();
-    openWhatsApp(feedbackMessage());
-    document.getElementById("feedbackSent").style.display = "block";
+    var form = this;
+    var btn = form.querySelector('button[type="submit"]');
+    var idea = val("f-idea");
+    if (!idea) {
+      document.getElementById("f-idea").reportValidity();
+      return;
+    }
+    if (btn) { btn.disabled = true; btn.textContent = "Sending..."; }
+    fetch("/api/idea", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: val("f-name"),
+        topic: val("f-topic"),
+        idea: idea
+      })
+    }).then(function (r) {
+      if (!r.ok) throw new Error("bad status");
+      return r.json().catch(function () { return { ok: true }; });
+    }).then(function () {
+      document.getElementById("feedbackSent").style.display = "block";
+      form.reset();
+      if (btn) { btn.disabled = false; btn.textContent = "Send Idea via Email"; }
+    }).catch(function () {
+      if (btn) { btn.disabled = false; btn.textContent = "Send Idea via Email"; }
+      alert("Something went wrong sending your idea - please email info@theimpactfestival.com.");
+    });
   });
 </script>
 </body>

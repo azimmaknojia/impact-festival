@@ -1,0 +1,715 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Registrations &mdash; Impact Festival Admin</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#1e3340">
+<style>
+  :root {
+    --ink: #22303a;
+    --ink-soft: #55656f;
+    --ground: #faf7f0;
+    --card: #ffffff;
+    --deep: #1e3340;
+    --deep-2: #16414b;
+    --gold: #c9a24b;
+    --gold-soft: #e8d9b0;
+    --copper: #b9793f;
+    --line: #e4dcc9;
+    --ok: #2e7d5b;
+    --danger: #b33a3a;
+    --fest-blue: #2f62c4;
+    --fest-red: #c23a37;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+      radial-gradient(900px 420px at 90% -10%, rgba(201,162,75,0.22), transparent 60%),
+      radial-gradient(700px 380px at 0% 100%, rgba(194,58,55,0.08), transparent 55%),
+      var(--ground);
+    color: var(--ink);
+    font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 {
+    font-family: "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    line-height: 1.15;
+    margin: 0;
+  }
+  button, input, select { font: inherit; }
+  [hidden] { display: none !important; }
+
+  .band {
+    height: 8px;
+    background: repeating-linear-gradient(90deg,
+      var(--gold) 0 22px, #a8442e 22px 44px, var(--deep-2) 44px 66px);
+  }
+
+  /* ---------- Login ---------- */
+  .login-wrap {
+    min-height: calc(100vh - 8px);
+    display: grid;
+    place-items: center;
+    padding: 32px 20px;
+  }
+  .login-card {
+    width: min(420px, 100%);
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 36px 32px 32px;
+    box-shadow: 0 18px 50px rgba(30, 51, 64, 0.08);
+  }
+  .login-card .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--fest-blue);
+    margin: 0 0 10px;
+  }
+  .login-card h1 { font-size: 32px; margin-bottom: 8px; }
+  .login-card p {
+    margin: 0 0 24px;
+    color: var(--ink-soft);
+    font-size: 15px;
+  }
+  .field { margin-bottom: 16px; }
+  .field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .field input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: #fff;
+    color: var(--ink);
+  }
+  .field input:focus {
+    outline: 2px solid rgba(201, 162, 75, 0.45);
+    border-color: var(--gold);
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: none;
+    border-radius: 999px;
+    padding: 12px 22px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+  .btn-gold { background: var(--gold); color: #1e3340; }
+  .btn-deep { background: var(--deep); color: #faf7f0; }
+  .btn-ghost {
+    background: transparent;
+    color: var(--ink-soft);
+    border: 1px solid var(--line);
+  }
+  .btn-danger {
+    background: transparent;
+    color: var(--danger);
+    border: 1px solid rgba(179, 58, 58, 0.35);
+  }
+  .btn-sm { padding: 8px 14px; font-size: 13px; }
+  .login-error {
+    color: var(--danger);
+    font-size: 14px;
+    margin: 0 0 14px;
+    min-height: 1.2em;
+  }
+  .login-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .login-actions .btn { flex: 1; min-width: 120px; }
+
+  /* ---------- Dashboard ---------- */
+  .shell { max-width: 1180px; margin: 0 auto; padding: 28px 20px 64px; }
+  .topbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .topbar .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--fest-red);
+    margin: 0 0 8px;
+  }
+  .topbar h1 { font-size: clamp(28px, 4vw, 40px); }
+  .topbar-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 22px;
+  }
+  @media (max-width: 800px) {
+    .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  .stat {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 18px 18px 16px;
+  }
+  .stat .label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-soft);
+    font-weight: 700;
+  }
+  .stat .value {
+    font-family: "Palatino Linotype", Palatino, Georgia, serif;
+    font-size: 34px;
+    margin-top: 6px;
+    color: var(--deep);
+  }
+  .stat .hint { font-size: 13px; color: var(--ink-soft); margin-top: 4px; }
+
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+    align-items: center;
+  }
+  .search {
+    flex: 1;
+    min-width: 220px;
+    padding: 11px 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--card);
+  }
+  .search:focus {
+    outline: 2px solid rgba(201, 162, 75, 0.45);
+    border-color: var(--gold);
+  }
+
+  .panel {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .empty {
+    padding: 48px 24px;
+    text-align: center;
+    color: var(--ink-soft);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  th, td {
+    text-align: left;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  th {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-soft);
+    background: rgba(250, 247, 240, 0.85);
+    position: sticky;
+    top: 0;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr.clickable { cursor: pointer; }
+  tr.clickable:hover td { background: rgba(201, 162, 75, 0.08); }
+  tr.expanded td { background: rgba(30, 51, 64, 0.03); }
+  .name { font-weight: 700; color: var(--deep); }
+  .muted { color: var(--ink-soft); }
+  .badge {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    background: var(--gold-soft);
+    color: #5a4318;
+  }
+  .badge.visa-yes { background: rgba(194, 58, 55, 0.12); color: var(--fest-red); }
+  .badge.visa-no { background: rgba(46, 125, 91, 0.12); color: var(--ok); }
+
+  .detail-row td {
+    padding: 0 16px 18px;
+    background: #f6f2e8;
+  }
+  .detail-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px 18px;
+    padding-top: 4px;
+  }
+  @media (max-width: 800px) {
+    .detail-grid { grid-template-columns: 1fr 1fr; }
+    .hide-sm { display: none; }
+  }
+  @media (max-width: 560px) {
+    .detail-grid { grid-template-columns: 1fr; }
+    table, thead, tbody, th, td, tr { display: block; }
+    thead { display: none; }
+    tr.clickable {
+      border-bottom: 1px solid var(--line);
+      padding: 12px 0;
+    }
+    tr.clickable td {
+      border: none;
+      padding: 2px 16px;
+    }
+    tr.clickable td::before {
+      content: attr(data-label);
+      display: block;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-soft);
+      font-weight: 700;
+    }
+    .detail-row td { padding: 8px 16px 16px; }
+  }
+  .kv .k {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+    font-weight: 700;
+  }
+  .kv .v {
+    margin-top: 2px;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .detail-actions {
+    margin-top: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .toast {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    background: var(--deep);
+    color: #faf7f0;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: none;
+    z-index: 50;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+<div class="band"></div>
+
+<div id="loginView" class="login-wrap">
+  <form class="login-card" id="loginForm">
+    <p class="eyebrow">Impact Festival</p>
+    <h1>Registrations</h1>
+    <p>Enter the admin password to view and export sign-ups.</p>
+    <div class="field">
+      <label for="password">Admin password</label>
+      <input id="password" type="password" autocomplete="current-password" required placeholder="REG_ADMIN_TOKEN">
+    </div>
+    <p class="login-error" id="loginError"></p>
+    <div class="login-actions">
+      <button type="submit" class="btn btn-gold" id="loginBtn">Sign in</button>
+      <a class="btn btn-ghost" href="/">Back to site</a>
+    </div>
+  </form>
+</div>
+
+<div id="dashView" class="shell" hidden>
+  <div class="topbar">
+    <div>
+      <p class="eyebrow">Admin</p>
+      <h1>Registered guests</h1>
+    </div>
+    <div class="topbar-actions">
+      <button type="button" class="btn btn-deep btn-sm" id="refreshBtn">Refresh</button>
+      <button type="button" class="btn btn-gold btn-sm" id="csvBtn">Download CSV</button>
+      <button type="button" class="btn btn-ghost btn-sm" id="logoutBtn">Sign out</button>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="label">Registrations</div>
+      <div class="value" id="statCount">0</div>
+      <div class="hint">Submitted forms</div>
+    </div>
+    <div class="stat">
+      <div class="label">Guests</div>
+      <div class="value" id="statGuests">0</div>
+      <div class="hint">People in groups</div>
+    </div>
+    <div class="stat">
+      <div class="label">Need visa</div>
+      <div class="value" id="statVisa">0</div>
+      <div class="hint">Answered yes</div>
+    </div>
+    <div class="stat">
+      <div class="label">Latest</div>
+      <div class="value" id="statLatest" style="font-size:20px; margin-top:12px;">&mdash;</div>
+      <div class="hint">Most recent signup</div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <input class="search" id="search" type="search" placeholder="Search name, phone, email, city, village...">
+  </div>
+
+  <div class="panel">
+    <div id="emptyState" class="empty" hidden>No registrations match your search.</div>
+    <div id="tableWrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Contact</th>
+            <th class="hide-sm">Location</th>
+            <th>Group</th>
+            <th class="hide-sm">Visa</th>
+            <th>Submitted</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function () {
+  var STORAGE_KEY = "impact_admin_token";
+  var token = sessionStorage.getItem(STORAGE_KEY) || "";
+  var rows = [];
+  var openKey = null;
+
+  var loginView = document.getElementById("loginView");
+  var dashView = document.getElementById("dashView");
+  var loginError = document.getElementById("loginError");
+  var loginBtn = document.getElementById("loginBtn");
+  var tbody = document.getElementById("tbody");
+  var emptyState = document.getElementById("emptyState");
+  var tableWrap = document.getElementById("tableWrap");
+  var toastEl = document.getElementById("toast");
+  var toastTimer = null;
+
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () {
+      toastEl.classList.remove("show");
+    }, 2400);
+  }
+
+  function showLogin(msg) {
+    token = "";
+    sessionStorage.removeItem(STORAGE_KEY);
+    loginView.hidden = false;
+    dashView.hidden = true;
+    loginError.textContent = msg || "";
+  }
+
+  function showDash() {
+    loginView.hidden = true;
+    dashView.hidden = false;
+  }
+
+  function apiUrl(extra) {
+    var u = "/api/registrations";
+    if (extra) u += (extra.indexOf("?") === 0 ? extra : "?" + extra);
+    return u;
+  }
+
+  function fetchRegs(opts) {
+    opts = opts || {};
+    var headers = { "X-Admin-Token": token };
+    var url = apiUrl(opts.query || "");
+    return fetch(url, {
+      method: opts.method || "GET",
+      headers: headers,
+      cache: "no-store"
+    }).then(function (r) {
+      if (r.status === 401) {
+        showLogin("Wrong password, or session expired.");
+        throw new Error("unauthorized");
+      }
+      if (!r.ok) throw new Error("bad status " + r.status);
+      if (opts.raw) return r;
+      return r.json();
+    });
+  }
+
+  function guestCount(r) {
+    if (r.group_size === "more" && r.group_size_exact) {
+      return Number(r.group_size_exact) || 0;
+    }
+    return Number(r.group_size) || 1;
+  }
+
+  function fmtDate(iso) {
+    if (!iso) return "&mdash;";
+    try {
+      var d = new Date(iso);
+      return d.toLocaleString(undefined, {
+        month: "short", day: "numeric", year: "numeric",
+        hour: "numeric", minute: "2-digit"
+      });
+    } catch (e) {
+      return iso;
+    }
+  }
+
+  function esc(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function villageLabel(r) {
+    if (r.ancestral_village === "__other__") return r.ancestral_village_other || "Other";
+    if (r.ancestral_village === "__notsure__") return "Not sure";
+    return r.ancestral_village || "";
+  }
+
+  function formatParty(raw) {
+    if (!raw) return "";
+    try {
+      var parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        return parsed.map(function (m, i) {
+          var parts = [m.name || "(unnamed)"];
+          if (m.age) parts.push("age " + m.age);
+          if (m.gender) parts.push(m.gender);
+          if (m.relationship) parts.push(m.relationship);
+          return (i + 2) + ". " + parts.join(", ");
+        }).join("\n");
+      }
+    } catch (e) {}
+    return String(raw);
+  }
+
+  function filtered() {
+    var q = (document.getElementById("search").value || "").trim().toLowerCase();
+    if (!q) return rows.slice();
+    return rows.filter(function (r) {
+      var hay = [
+        r.name, r.phone, r.email, r.city, r.country_of_birth, r.country_of_origin,
+        r.needs_visa, r.group_size, r.group_size_exact,
+        r.ancestral_village, r.ancestral_village_other,
+        r.party_members, r.notes, r.ip, r.key
+      ].join(" ").toLowerCase();
+      return hay.indexOf(q) !== -1;
+    });
+  }
+
+  function updateStats(list) {
+    var guests = 0;
+    var visa = 0;
+    list.forEach(function (r) {
+      guests += guestCount(r);
+      if (String(r.needs_visa).toLowerCase() === "yes") visa += 1;
+    });
+    document.getElementById("statCount").textContent = String(list.length);
+    document.getElementById("statGuests").textContent = String(guests);
+    document.getElementById("statVisa").textContent = String(visa);
+    document.getElementById("statLatest").textContent =
+      list.length ? fmtDate(list[0].submitted_at).replace(/,/g, "") : "\u2014";
+  }
+
+  function detailHtml(r) {
+    function kv(k, v) {
+      return '<div class="kv"><div class="k">' + esc(k) + '</div><div class="v">' +
+        (v ? esc(v) : '<span class="muted">&mdash;</span>') + '</div></div>';
+    }
+    return [
+      '<tr class="detail-row" data-detail="' + esc(r.key) + '"><td colspan="6">',
+      '<div class="detail-grid">',
+      kv("Email", r.email),
+      kv("Country of birth", r.country_of_birth || r.country_of_origin),
+      kv("Ancestral village", villageLabel(r)),
+      kv("Party members", formatParty(r.party_members)),
+      kv("Disclosure", r.disclosure),
+      kv("Notes", r.notes),
+      kv("IP", r.ip),
+      kv("Record key", r.key),
+      '</div>',
+      '<div class="detail-actions">',
+      '<a class="btn btn-ghost btn-sm" href="tel:' + esc(String(r.phone || "").replace(/\s+/g, "")) + '">Call</a>',
+      (r.email ? '<a class="btn btn-ghost btn-sm" href="mailto:' + esc(r.email) + '">Email</a>' : ''),
+      '<button type="button" class="btn btn-danger btn-sm" data-delete="' + esc(r.key) + '">Delete</button>',
+      '</div>',
+      '</td></tr>'
+    ].join("");
+  }
+
+  function render() {
+    var list = filtered();
+    updateStats(rows);
+    if (!list.length) {
+      emptyState.hidden = false;
+      tableWrap.hidden = true;
+      tbody.innerHTML = "";
+      return;
+    }
+    emptyState.hidden = true;
+    tableWrap.hidden = false;
+    tbody.innerHTML = list.map(function (r) {
+      var visa = String(r.needs_visa || "");
+      var visaClass = visa.toLowerCase() === "yes" ? "visa-yes" :
+        visa.toLowerCase() === "no" ? "visa-no" : "";
+      var visaBadge = visa
+        ? '<span class="badge ' + visaClass + '">' + esc(visa) + '</span>'
+        : '<span class="muted">&mdash;</span>';
+      var group = r.group_size === "more"
+        ? (r.group_size_exact || "10+")
+        : (r.group_size || "1");
+      var open = openKey === r.key;
+      return [
+        '<tr class="clickable' + (open ? ' expanded' : '') + '" data-key="' + esc(r.key) + '">',
+        '<td data-label="Name"><div class="name">' + esc(r.name) + '</div>',
+        villageLabel(r) ? '<div class="muted">' + esc(villageLabel(r)) + '</div>' : '',
+        '</td>',
+        '<td data-label="Contact">' + esc(r.phone || "") +
+          (r.email ? '<div class="muted">' + esc(r.email) + '</div>' : '') + '</td>',
+        '<td class="hide-sm" data-label="Location">' +
+          esc([r.city, r.country_of_birth || r.country_of_origin].filter(Boolean).join(" \u00b7 ") || "\u2014") + '</td>',
+        '<td data-label="Group"><span class="badge">' + esc(group) +
+          (Number(group) === 1 ? ' person' : ' people') + '</span></td>',
+        '<td class="hide-sm" data-label="Visa">' + visaBadge + '</td>',
+        '<td data-label="Submitted">' + fmtDate(r.submitted_at) + '</td>',
+        '</tr>',
+        open ? detailHtml(r) : ''
+      ].join("");
+    }).join("");
+  }
+
+  function load() {
+    return fetchRegs().then(function (data) {
+      rows = data.registrations || [];
+      render();
+      toast("Loaded " + rows.length + " registration" + (rows.length === 1 ? "" : "s"));
+    });
+  }
+
+  document.getElementById("loginForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var pw = document.getElementById("password").value.trim();
+    if (!pw) return;
+    loginError.textContent = "";
+    loginBtn.disabled = true;
+    loginBtn.textContent = "Checking...";
+    token = pw;
+    fetchRegs().then(function (data) {
+      sessionStorage.setItem(STORAGE_KEY, token);
+      rows = data.registrations || [];
+      showDash();
+      render();
+      loginBtn.disabled = false;
+      loginBtn.textContent = "Sign in";
+      document.getElementById("password").value = "";
+    }).catch(function (err) {
+      token = "";
+      if (err.message !== "unauthorized") {
+        loginError.textContent = "Could not reach the server. Try again.";
+      }
+      loginBtn.disabled = false;
+      loginBtn.textContent = "Sign in";
+    });
+  });
+
+  document.getElementById("logoutBtn").addEventListener("click", function () {
+    showLogin("");
+  });
+
+  document.getElementById("refreshBtn").addEventListener("click", function () {
+    load().catch(function () {});
+  });
+
+  document.getElementById("csvBtn").addEventListener("click", function () {
+    fetchRegs({ query: "format=csv", raw: true }).then(function (r) {
+      return r.text();
+    }).then(function (csv) {
+      var blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "impact-registrations.csv";
+      a.click();
+      URL.revokeObjectURL(a.href);
+      toast("CSV downloaded");
+    }).catch(function () {});
+  });
+
+  document.getElementById("search").addEventListener("input", function () {
+    openKey = null;
+    render();
+  });
+
+  tbody.addEventListener("click", function (e) {
+    var del = e.target.closest("[data-delete]");
+    if (del) {
+      e.stopPropagation();
+      var key = del.getAttribute("data-delete");
+      if (!confirm("Delete this registration permanently?")) return;
+      fetchRegs({ query: "delete=" + encodeURIComponent(key) }).then(function () {
+        rows = rows.filter(function (r) { return r.key !== key; });
+        if (openKey === key) openKey = null;
+        render();
+        toast("Deleted");
+      }).catch(function () {});
+      return;
+    }
+    var row = e.target.closest("tr.clickable");
+    if (!row) return;
+    var key2 = row.getAttribute("data-key");
+    openKey = openKey === key2 ? null : key2;
+    render();
+  });
+
+  if (token) {
+    showDash();
+    load().catch(function () {});
+  }
+})();
+</script>
+</body>
+</html>

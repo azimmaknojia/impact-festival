@@ -4,6 +4,7 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 const { URL } = require("url");
+const { sendRegistrationEmails, sendIdeaEmail } = require("./mail");
 
 const ROOT = path.join(__dirname, "..");
 const ENV_FILE = path.join(ROOT, ".env");
@@ -123,6 +124,18 @@ async function handleRegister(req, res) {
     json(res, 422, { ok: false, error: "name and phone required" });
     return;
   }
+  if (!data.email) {
+    json(res, 422, { ok: false, error: "email required" });
+    return;
+  }
+  if (!data.disclosure || data.disclosure === "false") {
+    json(res, 422, { ok: false, error: "disclosure required" });
+    return;
+  }
+
+  if (data.country_of_birth && !data.country_of_origin) {
+    data.country_of_origin = data.country_of_birth;
+  }
 
   const key = makeKey();
   const record = Object.assign({}, data, {
@@ -137,11 +150,76 @@ async function handleRegister(req, res) {
     return;
   }
 
-  json(res, 200, { ok: true });
+  let emailResult = { confirmation: false, notify: false, error: "" };
+  try {
+    emailResult = await sendRegistrationEmails(record);
+  } catch (err) {
+    emailResult.error = err.message || String(err);
+  }
+
+  json(res, 200, {
+    ok: true,
+    email_sent: !!emailResult.confirmation,
+    email_error: emailResult.error || undefined,
+  });
+}
+
+async function handleIdea(req, res) {
+  if (req.method !== "POST") {
+    text(res, 405, "Method not allowed");
+    return;
+  }
+
+  let data;
+  try {
+    data = await parseBody(req);
+  } catch (err) {
+    json(res, 400, { ok: false, error: "bad request" });
+    return;
+  }
+
+  const idea = String(data.idea || "").trim();
+  if (!idea) {
+    json(res, 422, { ok: false, error: "idea required" });
+    return;
+  }
+
+  const record = {
+    name: String(data.name || "").trim(),
+    topic: String(data.topic || "Other").trim() || "Other",
+    idea: idea,
+    submitted_at: new Date().toISOString(),
+    ip: clientIp(req),
+  };
+
+  let sent;
+  try {
+    sent = await sendIdeaEmail(record);
+  } catch (err) {
+    json(res, 500, { ok: false, error: err.message || String(err) });
+    return;
+  }
+
+  if (!sent || !sent.sent) {
+    json(res, 500, { ok: false, error: (sent && sent.reason) || "email not sent" });
+    return;
+  }
+
+  json(res, 200, { ok: true, email_sent: true });
+}
+
+function adminTokenFrom(req, url) {
+  const q = url.searchParams.get("token");
+  if (q) return q;
+  const auth = req.headers.authorization || "";
+  if (auth.toLowerCase().startsWith("bearer ")) {
+    return auth.slice(7).trim();
+  }
+  return req.headers["x-admin-token"] || "";
 }
 
 async function handleRegistrations(req, res, url) {
-  const token = url.searchParams.get("token");
+  const token = adminTokenFrom(req, url);
   if (!ADMIN_TOKEN || token !== ADMIN_TOKEN) {
     text(res, 401, "Unauthorized");
     return;
@@ -160,9 +238,10 @@ async function handleRegistrations(req, res, url) {
 
   if (url.searchParams.get("format") === "csv") {
     const cols = [
-      "submitted_at", "name", "phone", "email", "city", "country_of_origin",
+      "submitted_at", "name", "phone", "email", "city",
+      "country_of_birth", "country_of_origin",
       "needs_visa", "group_size", "group_size_exact", "ancestral_village",
-      "ancestral_village_other", "party_members", "notes",
+      "ancestral_village_other", "party_members", "disclosure", "notes",
     ];
     const esc = function (s) {
       return '"' + String(s == null ? "" : s).replace(/"/g, '""') + '"';
@@ -189,6 +268,11 @@ const server = http.createServer(async function (req, res) {
 
   if (url.pathname === "/api/register") {
     await handleRegister(req, res);
+    return;
+  }
+
+  if (url.pathname === "/api/idea") {
+    await handleIdea(req, res);
     return;
   }
 

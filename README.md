@@ -2,8 +2,8 @@
 
 Live: https://theimpactfestival.com
 
-- **Event:** Dec 24–27, 2026 (tentative), Sidhpur, Gujarat, India
-- **Contact on site:** Shahid Maknojia, (832) 606-8254
+- **Event:** Dec 24–27, 2026, Sidhpur, Gujarat, India
+- **Contact on site:** Impact Festival Team — info@theimpactfestival.com
 - **GitHub:** https://github.com/azimmaknojia/impact-festival
 
 ## Hosting (AWS)
@@ -49,11 +49,26 @@ Create `/var/www/impact-festival/.env` on the server (not in git):
 
 ```
 REG_ADMIN_TOKEN=your-secret-token-here
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=info@theimpactfestival.com
+SMTP_PASS=your-gmail-app-password
+MAIL_FROM=Impact Festival Team <info@theimpactfestival.com>
+MAIL_REPLY_TO=info@theimpactfestival.com
+MAIL_NOTIFY=info@theimpactfestival.com
 ```
 
 Restart: `pm2 reload ecosystem.config.js --env production`
 
-## Admin: export registrations
+## Admin: track registrations
+
+Open the password-protected dashboard:
+
+https://theimpactfestival.com/admin.html
+
+Password = the `REG_ADMIN_TOKEN` value in the server `.env`.
+
+Raw API (same token):
 
 ```
 https://theimpactfestival.com/api/registrations?token=YOUR_TOKEN
